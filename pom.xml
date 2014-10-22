@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>net.anthavio.maven</groupId>
 		<artifactId>anthavio-super-pom</artifactId>
-		<version>2</version>
+		<version>3.1</version>
 		<relativePath/>
 	</parent>
 
@@ -16,48 +16,75 @@
 	<packaging>war</packaging>
 	
 	<properties>
-	<!--
-		<java.version>1.7</java.version>
-		<project.build.java.target>1.7</project.build.java.target>
-		<enforce.java.version>1.7.0</enforce.java.version>
-	-->
-		<aspectj.version>1.7.4</aspectj.version>
-		<vaadin.version>7.2.1</vaadin.version>
-		<spring.version>4.0.5.RELEASE</spring.version>
-		<spring-boot.version>1.1.0.M2</spring-boot.version>
-		<start-class>net.anthavio.vinbudin.Application</start-class>
+		
+		<project.build.java.target>1.8</project.build.java.target>
+		
+		<aspectj.version>1.8.2</aspectj.version>
+		<vaadin.version>7.3.3</vaadin.version>
+		
+		<spring.version>4.1.1.RELEASE</spring.version>
+		<spring-boot.version>1.1.8.RELEASE</spring-boot.version>
+		
+		<start-class>net.anthavio.vinbudin.ApplicationJ</start-class>
 	</properties>
+	
+	<dependencyManagement>
+		<dependencies>
+		
+			<dependency>
+				<groupId>net.anthavio.maven</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>4.1.1.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>net.anthavio.maven</groupId>
+				<artifactId>jetty-bom</artifactId>
+				<version>9.2.3</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 		
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.5</version>
+			<version>1.7.7</version>
 		</dependency>
 		
 		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy-all</artifactId>
-			<version>2.3.1</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>1.7.7</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
 		<dependency>
 			<groupId>net.anthavio</groupId>
 			<artifactId>anthavio-aspects</artifactId>
 			<version>1.0.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.aspectj</groupId>
+					<artifactId>aspectjrt</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>
-			<version>${spring.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.aspectj</groupId>
-					<artifactId>aspectjweaver</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
 		<dependency>
@@ -65,7 +92,7 @@
 			<artifactId>spring-boot-starter</artifactId>
 			<version>${spring-boot.version}</version>
 		</dependency>
-		
+<!--
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
@@ -74,22 +101,59 @@
 		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter-remote-shell</artifactId>
 			<version>${spring-boot.version}</version>
 		</dependency>
-	
+		-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>${spring-boot.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jetty</artifactId>
+			<version>${spring-boot.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-webapp</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-jsp</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-jsp</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>websocket-server</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 			<version>${spring-boot.version}</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jetty</artifactId>
-			<version>${spring-boot.version}</version>
-		</dependency>
-		
+<!--		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -99,22 +163,8 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<version>${spring-boot.version}</version>
-			<scope>test</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
-			<scope>test</scope>
-		</dependency>
+-->
 
 <!--		
 		<dependency>
@@ -132,6 +182,13 @@
 -->
 
 		<!-- vaadin-ui -->
+		<!-- https://vaadin.com/book/-/page/getting-started.libraries.html -->
+		
+		<dependency>
+			<groupId>org.vaadin.spring</groupId>
+			<artifactId>spring-boot-vaadin</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
+		</dependency>
 		
 		<dependency>
 			<groupId>com.vaadin</groupId>
@@ -184,25 +241,57 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
+-->
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-push</artifactId>
 			<version>${vaadin.version}</version>
 		</dependency>
--->
+		
+		<!--
+		AspectJ compilation: 
+			error can't determine superclass of missing type org.springframework.transaction.interceptor.TransactionAspectSupport
+			error can't determine superclass of missing type org.springframework.cache.jcache.interceptor.JCacheAspectSupport
+		-->
+		
 		<dependency>
-			<groupId>ru.xpoft.vaadin</groupId>
-			<artifactId>spring-vaadin-integration</artifactId>
-			<version>2.0.2</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
 		</dependency>
 		
-		<!-- test -->
-		
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.1.1</version>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
+			<version>1.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		
+		<!-- test -->
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+				
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>${spring-boot.version}</version>
+			<scope>test</scope>
 		</dependency>
 		
 <!-- fake services 
@@ -227,88 +316,30 @@
 	</repositories>
 
 	<build>
+		<!--
+		<outputDirectory>${project.build.directory}/unwoven-classes</outputDirectory>
+		-->
 		<plugins>
 	
-			<!-- http://groovy.codehaus.org/Groovy-Eclipse+compiler+plugin+for+Maven#Groovy-EclipsecompilerpluginforMaven-Usethegroovy-eclipse-compilermojoforconfiguringsourcefolders -->
-			
-			<plugin>
-				<groupId>org.codehaus.groovy</groupId>
-				<artifactId>groovy-eclipse-compiler</artifactId>
-				<version>2.8.0-01</version>
-				<extensions>true</extensions>
-			</plugin>
-<!--
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>add-source</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/main/groovy</source>
-							</sources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>add-test-source</id>
-						<phase>generate-test-sources</phase>
-						<goals>
-							<goal>add-test-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/test/groovy</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
--->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<compilerId>groovy-eclipse-compiler</compilerId>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.codehaus.groovy</groupId>
-						<artifactId>groovy-eclipse-compiler</artifactId>
-						<version>2.8.0-01</version>
-					</dependency>
-					<!-- for 2.8.0-01 and later you must have an explicit dependency on 
-						groovy-eclipse-batch -->
-					<dependency>
-						<groupId>org.codehaus.groovy</groupId>
-						<artifactId>groovy-eclipse-batch</artifactId>
-						<version>2.1.8-01</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
 				<executions>
 					<execution>
+						<phase>process-classes</phase>
 						<goals>
 							<goal>compile</goal>
 						</goals>
 					</execution>
 				</executions>
 				<configuration>
+					<outputDirectory></outputDirectory>
 					<aspectLibraries>
-					<!--
 						<aspectLibrary>
 							<groupId>org.springframework</groupId>
 							<artifactId>spring-aspects</artifactId>
 						</aspectLibrary>
-					-->
 						<aspectLibrary>
 							<groupId>net.anthavio</groupId>
 							<artifactId>anthavio-aspects</artifactId>
@@ -316,7 +347,7 @@
 					</aspectLibraries>
 				</configuration>
 			</plugin>
-			
+
 			<!-- From https://github.com/spring-projects/spring-boot/blob/master/spring-boot-starters/spring-boot-starter-parent/pom.xml -->
 
 			<plugin>
@@ -366,7 +397,7 @@
 					<mainClass>${start-class}</mainClass>
 				</configuration>
 			</plugin>
-
+<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -417,7 +448,7 @@
 					</execution>
 				</executions>
 			</plugin>
-
+-->
 		</plugins>
 	</build>
 	
