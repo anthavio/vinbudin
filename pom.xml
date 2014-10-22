@@ -69,6 +69,12 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.1.1</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>net.anthavio</groupId>
+			<artifactId>hatatitla</artifactId>
+			<version>1.5.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>net.anthavio</groupId>
@@ -92,7 +98,7 @@
 			<artifactId>spring-boot-starter</artifactId>
 			<version>${spring-boot.version}</version>
 		</dependency>
-<!--
+		<!--
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
@@ -183,10 +189,16 @@
 
 		<!-- vaadin-ui -->
 		<!-- https://vaadin.com/book/-/page/getting-started.libraries.html -->
-		
+		<!--
 		<dependency>
 			<groupId>org.vaadin.spring</groupId>
 			<artifactId>spring-boot-vaadin</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
+		</dependency>
+		-->
+		<dependency>
+			<groupId>org.vaadin.spring</groupId>
+			<artifactId>spring-vaadin</artifactId>
 			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
 		

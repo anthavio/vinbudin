@@ -5,10 +5,14 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class ChatService {
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private final List<ChatMessageListener> listeners = new CopyOnWriteArrayList<ChatMessageListener>();
 
@@ -29,7 +33,7 @@ public class ChatService {
 			try {
 				listener.onChatMessage(message);
 			} catch (Exception x) {
-				x.printStackTrace();
+				logger.warn("Listener " + listener + " failed");
 			}
 		});
 

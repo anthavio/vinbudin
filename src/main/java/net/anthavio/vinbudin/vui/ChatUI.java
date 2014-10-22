@@ -44,20 +44,16 @@ public class ChatUI extends UI implements ChatMessageListener {
 	protected void init(VaadinRequest request) {
 
 		labelBoard.setSizeFull();
-		buttonSend.setEnabled(false);
 
-		buttonSend.setClickShortcut(KeyCode.ENTER);
-		buttonSend.addStyleName(ValoTheme.BUTTON_PRIMARY);
-
-		buttonCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
-
-		//fieldMessage.setNullRepresentation("Say something...");
-		//fieldMessage.setNullSettingAllowed(false);
 		fieldMessage.setWidth("100%");
 		fieldMessage.addTextChangeListener(event -> {
 			String text = event.getText();
 			buttonSend.setEnabled(text != null && text.length() > 2);
 		});
+
+		buttonSend.setEnabled(false);
+		buttonSend.setClickShortcut(KeyCode.ENTER);
+		buttonSend.addStyleName(ValoTheme.BUTTON_PRIMARY);
 
 		buttonSend.addClickListener(event -> {
 			service.addMessage("Anonymous", fieldMessage.getValue());
@@ -65,6 +61,8 @@ public class ChatUI extends UI implements ChatMessageListener {
 			buttonSend.setEnabled(false);
 			//updateBoard();
 			});
+
+		buttonCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 
 		buttonCancel.addClickListener(event -> {
 			fieldMessage.setValue("");

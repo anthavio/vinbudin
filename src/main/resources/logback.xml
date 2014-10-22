@@ -2,7 +2,7 @@
 <configuration debug="false" scan="true" scanPeriod="10 seconds">
 
 	<appender name="LOGFILE" class="ch.qos.logback.core.FileAppender">
-		<File>target/anthavio-spring.log</File>
+		<File>target/vinbudin.log</File>
 		<Append>false</Append>
 
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -24,8 +24,8 @@
 		<level value="debug"/>
 	</logger>
 	
-	<logger name="org.springframework.test.context.support">
-		<level value="debug"/>
+	<logger name="org.springframework.web">
+		<level value="info"/>
 	</logger>
 	
 	<root>
