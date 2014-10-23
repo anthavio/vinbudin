@@ -1,6 +1,14 @@
 package net.anthavio.vinbudin;
 
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
+
+import net.anthavio.httl.HttlResponse;
+import net.anthavio.httl.HttlResponseExtractor;
 import net.anthavio.httl.auth.OAuthTokenResponse;
+import net.anthavio.httl.util.HttlUtil;
 import net.anthavio.vinbudin.OAuthService.OAuthProviders;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +37,9 @@ public class OAuthController {
 	public String wotErrorCallback(@RequestParam(value = "status") String status,
 			@RequestParam(value = "message") String message, @RequestParam(value = "code") String code) {
 		if ("AUTH_CANCEL".equals(message)) {
-			return errorCallback("wot", "access_denied", null);
+			return oauthErrorCallback("wot", "access_denied", null);
 		} else {
-			return errorCallback("wot", code, message);
+			return oauthErrorCallback("wot", code, message);
 		}
 	}
 
@@ -43,9 +51,29 @@ public class OAuthController {
 		return "Hello " + nickname;
 	}
 
+	/**
+	 * When user denies or on any error Bitly does not bother with returning anything...
+	 */
+	@ResponseBody
+	@RequestMapping(value = "callback/bitly")
+	public String bitlyErrorCallback() {
+		return oauthErrorCallback("bitly", "access_denied", "bitly_says_no");
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "callback/bitly", params = "code")
+	public String bitlyCodeCallback(@RequestParam(value = "code") String code) {
+		OAuthProviders op = OAuthProviders.getByName("bitly");
+		Map<String, String> response = op.getOAuth().access(code)
+				.get(new XFormEncodedExtractor("application/x-www-form-urlencoded"));
+		String access_token = response.get("access_token");
+		response.get("login");
+		return access_token;
+	}
+
 	@ResponseBody
 	@RequestMapping(value = "callback/{provider}", params = "error")
-	public String errorCallback(@PathVariable(value = "provider") String provider,
+	public String oauthErrorCallback(@PathVariable(value = "provider") String provider,
 			@RequestParam(value = "error") String error,
 			@RequestParam(value = "error_description", required = false) String error_description) {
 		if (error_description != null) {
@@ -59,22 +87,15 @@ public class OAuthController {
 
 	@ResponseBody
 	@RequestMapping(value = "callback/{provider}", params = "code")
-	public String codeCallback(@PathVariable(value = "provider") String provider,
+	public String oauthCodeCallback(@PathVariable(value = "provider") String provider,
 			@RequestParam(value = "code") String code) {
 
 		OAuthProviders op = OAuthProviders.getByName(provider);
 		OAuthTokenResponse tokenResponse;
 		if (op == OAuthProviders.FACEBOOK) {
-			String facebookResponse = op.getOAuth().access(code).get(String.class);
-			final String xtoken = "access_token=";
-			final String xexpires = "&expires=";
-			int tokenStartIdx = facebookResponse.indexOf(xtoken);
-			int expiryStartIdx = facebookResponse.indexOf(xexpires);
-			if (tokenStartIdx != 0 || expiryStartIdx == -1) {
-				throw new IllegalStateException("Unpareseable Facebook Token response: " + facebookResponse);
-			}
-			String access_token = facebookResponse.substring(xtoken.length(), expiryStartIdx);
-			String expiry = facebookResponse.substring(expiryStartIdx + xexpires.length());
+			Map<String, String> map = op.getOAuth().access(code).get(new XFormEncodedExtractor("text/plain"));
+			String access_token = map.get("access_token");
+			String expires = map.get("expires");
 			tokenResponse = new OAuthTokenResponse(access_token);
 		} else {
 			tokenResponse = op.getOAuth().access(code).get();
@@ -82,5 +103,36 @@ public class OAuthController {
 		}
 
 		return "" + tokenResponse;
+	}
+
+	static class XFormEncodedExtractor implements HttlResponseExtractor<Map<String, String>> {
+
+		private final String mediaType;
+
+		public XFormEncodedExtractor(String mediaType) {
+			this.mediaType = mediaType;
+		}
+
+		@Override
+		public Map<String, String> extract(HttlResponse response) throws IOException {
+			int code = response.getHttpStatusCode();
+			if (code < 200 || code > 299) {
+				throw new IllegalArgumentException("Unexpected status code " + response);
+			}
+			if (!mediaType.equals(response.getMediaType())) {
+				throw new IllegalArgumentException("Unexpected media type " + response);
+			}
+			Map<String, String> map = new HashMap<String, String>();
+			String line = HttlUtil.readAsString(response);
+			String[] pairs = line.split("\\&");
+			for (int i = 0; i < pairs.length; i++) {
+				String[] fields = pairs[i].split("=");
+				String name = URLDecoder.decode(fields[0], response.getEncoding());
+				String value = URLDecoder.decode(fields[1], response.getEncoding());
+				map.put(name, value);
+			}
+			return map;
+		}
+
 	}
 }

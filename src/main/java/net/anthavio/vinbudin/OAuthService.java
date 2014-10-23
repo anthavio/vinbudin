@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class OAuthService {
 
 	public static enum OAuthProviders {
-		GOOGLE, FACEBOOK, GITHUB, LINKEDIN, DISQUS, WOT;
+		GOOGLE, FACEBOOK, GITHUB, LINKEDIN, DISQUS, BITLY, WOT;
 
 		private OAuth2 oauth;
 
@@ -68,7 +68,21 @@ public class OAuthService {
 		OAuthProviders.LINKEDIN.setOAuth(buildLinkedIn(properties, redirectUri), "r_basicprofile");
 		OAuthProviders.GITHUB.setOAuth(buildGithub(properties, redirectUri), "");
 		OAuthProviders.DISQUS.setOAuth(buildDisqus(properties, redirectUri), "read");
+		OAuthProviders.BITLY.setOAuth(buildBitly(properties, redirectUri), "");
 		OAuthProviders.WOT.setOAuth(buildWot(properties, redirectUri), "");
+	}
+
+	private OAuth2 buildBitly(Properties properties, String redirectUri) {
+		HttlSender sender = HttlSender.url("https://api-ssl.bitly.com").httpClient4().sender().build();
+
+		String clientId = properties.getProperty("bitly.client_id");
+		String clientSecret = properties.getProperty("bitly.client_secret");
+		redirectUri = redirectUri.replace("{provider}", "bitly");
+
+		OAuth2 oauth = new OAuth2Builder().setClientId(clientId).setClientSecret(clientSecret)
+				.setTokenEndpoint(sender, "/oauth/access_token").setAuthorizationUrl("https://bitly.com/oauth/authorize")
+				.setRedirectUri(redirectUri).build();
+		return oauth;
 	}
 
 	private OAuth2 buildWot(Properties properties, String redirectUri) {
