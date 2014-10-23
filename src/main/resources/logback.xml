@@ -20,14 +20,18 @@
 		</encoder>
 	</appender>
 	
-	<logger name="net.anthavio">
+	<logger name="org.apache.http.wire">
 		<level value="debug"/>
 	</logger>
 	
 	<logger name="org.springframework.web">
 		<level value="info"/>
 	</logger>
-	
+
+	<logger name="net.anthavio">
+		<level value="debug"/>
+	</logger>
+		
 	<root>
 		<level value="info" />
 		<appender-ref ref="CONSOLE" />
