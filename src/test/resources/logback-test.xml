@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration debug="false" scan="true" scanPeriod="30 seconds">
+<configuration debug="false" scan="true" scanPeriod="10 seconds">
 
 	<appender name="LOGFILE" class="ch.qos.logback.core.FileAppender">
-		<File>logs/vinbudin.log</File>
-		<Append>true</Append>
+		<File>target/vinbudin.log</File>
+		<Append>false</Append>
 
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>logs/vinbudin-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
-			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>10MB</maxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
-		</rollingPolicy>
-		
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<charset class="java.nio.charset.Charset">UTF-8</charset>
 			<pattern>%d|%-10t|%-5p|%c{40}: %m%n</pattern>
@@ -21,19 +14,14 @@
 	
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 
-		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-			<level>warn</level> 
-		</filter>
-		
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<charset class="java.nio.charset.Charset">UTF-8</charset>
 			<pattern>%d|%-10t|%X{TxInfo}|%-5p|%c{40}: %m%n</pattern>
 		</encoder>
-		
 	</appender>
 	
 	<logger name="org.apache.http.wire">
-		<level value="info"/>
+		<level value="debug"/>
 	</logger>
 	
 	<logger name="org.springframework.web">
@@ -41,7 +29,7 @@
 	</logger>
 
 	<logger name="net.anthavio">
-		<level value="info"/>
+		<level value="debug"/>
 	</logger>
 		
 	<root>

@@ -41,25 +41,4 @@ public class VinbudinBoot extends SpringBootServletInitializer {
 		SpringApplication.run(VinbudinBoot.class, args);
 	}
 
-	/*
-		@Bean
-		@Scope("prototype")
-		public UI ui() {
-			return new MyVaadinUI();
-		}
-
-		@Bean
-		public ServletRegistrationBean servletRegistrationBean() {
-			System.out.println("xxxxxxxxxxxx");
-			final ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(
-					new ru.xpoft.vaadin.SpringVaadinServlet(), "/*", "/VAADIN/*");
-			return servletRegistrationBean;
-		}
-
-		@Override
-		public SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-			System.out.println("zzzzzzzzzzzzzz");
-			return application.sources(ApplicationJ.class);
-		}
-	*/
 }

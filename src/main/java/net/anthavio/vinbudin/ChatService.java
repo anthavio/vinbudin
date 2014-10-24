@@ -16,7 +16,7 @@ public class ChatService {
 
 	private final List<ChatMessageListener> listeners = new CopyOnWriteArrayList<ChatMessageListener>();
 
-	private AutoDiscardingDeque<String> messages = new AutoDiscardingDeque<String>(100);
+	private AutoDiscardingDeque<ChatMessage> messages = new AutoDiscardingDeque<ChatMessage>(100);
 
 	public void register(ChatMessageListener listener) {
 		listeners.add(listener);
@@ -26,9 +26,9 @@ public class ChatService {
 		listeners.remove(listener);
 	}
 
-	public void addMessage(String author, String message) {
-		messages.add(author + " : " + message);
-
+	public void addMessage(ChatMessage message) {
+		messages.add(message);
+		/*
 		listeners.forEach(listener -> {
 			try {
 				listener.onChatMessage(message);
@@ -36,14 +36,14 @@ public class ChatService {
 				logger.warn("Listener " + listener + " failed");
 			}
 		});
-
+		*/
 	}
 
 	public void clearMessages() {
 		messages.clear();
 	}
 
-	public Iterator<String> messagesIterator() {
+	public Iterator<ChatMessage> messagesIterator() {
 		return messages.descendingIterator();
 	}
 

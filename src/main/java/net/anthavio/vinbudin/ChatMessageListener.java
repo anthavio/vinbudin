@@ -7,5 +7,5 @@ package net.anthavio.vinbudin;
  */
 public interface ChatMessageListener {
 
-	public void onChatMessage(String message);
+	public void onChatMessage(ChatMessage message);
 }
