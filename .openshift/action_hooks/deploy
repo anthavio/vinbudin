@@ -33,3 +33,5 @@ export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
 
 cd $OPENSHIFT_REPO_DIR
 mvn -s .openshift/settings.xml clean install
+
+#scp src/main/resources/oauth.properties 544d051be0b8cd509b00001c@vinbudin-compost.rhcloud.com:/var/lib/openshift/544d051be0b8cd509b00001c/app-root/data/oauth.properties
