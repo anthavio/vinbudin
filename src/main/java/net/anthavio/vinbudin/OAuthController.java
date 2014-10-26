@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+@RequestMapping("/oauth")
 public class OAuthController {
 
 	public static enum OAuthProvider {
@@ -176,7 +177,8 @@ public class OAuthController {
 		}
 
 		session.setAttribute(ChatUI.ME_KEY, new ChatMan(name, p));
-		return "redirect:/vui";
+		//Go back to Vaddin UI
+		return "redirect:/ui";
 	}
 
 	private String facebook(String code) {

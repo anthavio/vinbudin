@@ -28,7 +28,7 @@ public class VinbudinBoot extends SpringBootServletInitializer {
 
 	@Bean
 	public ServletRegistrationBean SpringAwareVaadinServlet() {
-		return new ServletRegistrationBean(new SpringAwareVaadinServlet(), "/vui/*", "/VAADIN/*");
+		return new ServletRegistrationBean(new SpringAwareVaadinServlet(), "/ui/*", "/VAADIN/*");
 	}
 
 	@Bean
