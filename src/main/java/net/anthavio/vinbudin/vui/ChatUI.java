@@ -16,6 +16,7 @@ import org.vaadin.spring.events.EventBusListenerMethod;
 import org.vaadin.spring.events.EventBusScope;
 import org.vaadin.spring.events.EventScope;
 
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.event.ShortcutAction;
@@ -36,10 +37,15 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-@Push(transport = Transport.WEBSOCKET)
+/**
+ * 
+ * @author martin.vanek
+ *
+ */
 @VaadinUI
-//@PreserveOnRefresh
+@PreserveOnRefresh
 @Theme("valo")
+@Push(transport = Transport.WEBSOCKET)
 public class ChatUI extends UI implements ChatMessageListener {
 
 	private static final long serialVersionUID = 1L;
@@ -68,8 +74,6 @@ public class ChatUI extends UI implements ChatMessageListener {
 	@Override
 	protected void init(VaadinRequest request) {
 
-		labelBoard.setSizeFull();
-
 		fieldMessage.setMaxLength(100);
 		fieldMessage.setEnabled(false);
 		fieldMessage.setWidth("100%");
@@ -88,8 +92,7 @@ public class ChatUI extends UI implements ChatMessageListener {
 			busAppScope.publish(this, message);
 			fieldMessage.setValue("");
 			buttonSend.setEnabled(false);
-			//updateBoard();
-			});
+		});
 
 		buttonCancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
 		buttonCancel.addClickListener(event -> {
@@ -112,7 +115,8 @@ public class ChatUI extends UI implements ChatMessageListener {
 		}
 		miLogout = menubar.addItem("Replaceme", null);
 		miLogout.addItem("Logout", (selectedItem) -> {
-			logout();
+			setMe(null);
+			setUiStateByLogin();
 		});
 
 		HorizontalLayout lSending = new HorizontalLayout(fieldMessage, buttonSend, buttonCancel, buttonClear);
@@ -120,17 +124,33 @@ public class ChatUI extends UI implements ChatMessageListener {
 		lSending.setSpacing(true);
 		lSending.setExpandRatio(fieldMessage, 1);
 
+		labelBoard.setSizeFull();
+
 		VerticalLayout layout = new VerticalLayout(menubar, lSending, labelBoard);
 		layout.setSpacing(true);
 		layout.setMargin(true);
 		setContent(layout);
 		setSizeFull();
 
-		updateByLoginState();
-		updateBoard();
+		setUiStateByLogin();
+		refreshMessageBoard();
 		fieldMessage.focus();
 		//service.register(this);
 		busAppScope.subscribe(this);
+	}
+
+	@Override
+	protected void refresh(VaadinRequest request) {
+		setUiStateByLogin();
+		refreshMessageBoard();
+		fieldMessage.focus();
+	}
+
+	@Override
+	public void detach() {
+		//service.unregister(this);
+		busAppScope.unsubscribe(this);
+		super.detach();
 	}
 
 	private ChatMan getMe() {
@@ -141,7 +161,7 @@ public class ChatUI extends UI implements ChatMessageListener {
 		UI.getCurrent().getSession().getSession().setAttribute(ME_KEY, me);
 	}
 
-	private void updateByLoginState() {
+	private void setUiStateByLogin() {
 		boolean loggedin = getMe() != null;
 		fieldMessage.setEnabled(loggedin);
 		buttonClear.setEnabled(loggedin);
@@ -153,21 +173,10 @@ public class ChatUI extends UI implements ChatMessageListener {
 		}
 	}
 
-	void logout() {
-		setMe(null);
-		updateByLoginState();
-	}
-
-	@Override
-	public void detach() {
-		//service.unregister(this);
-		busAppScope.unsubscribe(this);
-		super.detach();
-	}
-
 	@EventBusListenerMethod
 	@Override
 	public void onChatMessage(ChatMessage message) {
+		//Push magic happens here
 		access(new Runnable() {
 			@Override
 			public void run() {
@@ -176,13 +185,13 @@ public class ChatUI extends UI implements ChatMessageListener {
 							Type.TRAY_NOTIFICATION);
 					n.show(getPage());
 				}
-				updateBoard();
+				refreshMessageBoard();
 			}
 		});
 
 	}
 
-	private void updateBoard() {
+	private void refreshMessageBoard() {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy 'at' HH:mm z");
 		Iterator<ChatMessage> messages = service.messagesIterator();
 		StringBuilder sb = new StringBuilder();
@@ -202,7 +211,7 @@ public class ChatUI extends UI implements ChatMessageListener {
 			OAuthProvider provider = OAuthProvider.getByName(selectedItem.getText());
 			String url = provider.getOAuth().getAuthorizationUrl(provider.getScopes(),
 					String.valueOf(System.currentTimeMillis()));
-			getUI().getPage().setLocation(url); //redirect to auth...
+			getUI().getPage().setLocation(url); //redirect to OAuth...
 		}
 	}
 
