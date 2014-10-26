@@ -9,7 +9,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 cd $OPENSHIFT_REPO_DIR
 
-JAVA_SPROP="-Doauth.properties=$OPENSHIFT_DATA_DIR/oauth.properties"
+JAVA_SPROPS="-Doauth.properties=${OPENSHIFT_DATA_DIR}/oauth.properties"
 BOOT_PARAMS="--server.port=${OPENSHIFT_DIY_PORT} --server.address=${OPENSHIFT_DIY_IP} --spring.profiles.active=openshift"
 
-nohup java -Xms128m -Xmx256m -jar target/*.war ${BOOT_PARAMS} ${JAVA_SPROP} &
+nohup java -Xms128m -Xmx256m -jar target/*.war ${BOOT_PARAMS} ${JAVA_SPROPS} &

@@ -348,21 +348,23 @@ public class OAuthController {
 	private Properties load(String name) {
 		String property = System.getProperty(name, name);
 		try {
-			ClassLoader loader = Thread.currentThread().getContextClassLoader();
-			InputStream stream = loader.getResourceAsStream(property);
-			if (stream == null) {
-				File file = new File(property);
-				if (file.exists()) {
-					stream = new FileInputStream(file);
-				} else {
+			InputStream stream;
+			File file = new File(property);
+			if (file.exists()) {
+				stream = new FileInputStream(file);
+			} else {
+				ClassLoader loader = Thread.currentThread().getContextClassLoader();
+				stream = loader.getResourceAsStream(property);
+				if (stream == null) {
 					throw new IllegalArgumentException("Properties resource not found: " + property);
 				}
 			}
+
 			Properties properties = new Properties();
 			properties.load(stream);
 			return properties;
 		} catch (IOException iox) {
-			throw new IllegalStateException("Properties resource " + property + " cannot be loaded", iox);
+			throw new IllegalStateException("Properties resource " + property + " failed to load", iox);
 		}
 	}
 }
