@@ -1,5 +1,7 @@
 package net.anthavio.vinbudin;
 
+import javax.servlet.http.HttpSessionListener;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -27,6 +29,11 @@ public class VinbudinBoot extends SpringBootServletInitializer {
 	@Bean
 	public ServletRegistrationBean SpringAwareVaadinServlet() {
 		return new ServletRegistrationBean(new SpringAwareVaadinServlet(), "/vui/*", "/VAADIN/*");
+	}
+
+	@Bean
+	public HttpSessionListener AtmosphereSessionSupport() {
+		return new org.atmosphere.cpr.SessionSupport();
 	}
 
 	/*

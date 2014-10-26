@@ -25,7 +25,7 @@
 		<spring.version>4.1.1.RELEASE</spring.version>
 		<spring-boot.version>1.1.8.RELEASE</spring-boot.version>
 		
-		<start-class>net.anthavio.vinbudin.ApplicationJ</start-class>
+		<start-class>net.anthavio.vinbudin.VinbudinBoot</start-class>
 	</properties>
 	
 	<dependencyManagement>
@@ -331,12 +331,13 @@
 			<artifactId>fongo</artifactId>
 		</dependency>
 -->
+<!--
 		<dependency>
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j-cypher-compiler-2.1</artifactId>
 			<version>2.1.2</version>
 		</dependency>
-		
+-->		
 	</dependencies>
 	
 	<repositories>
@@ -360,7 +361,6 @@
 	<build>
 		<plugins>
 	
-
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
@@ -373,7 +373,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<outputDirectory></outputDirectory>
+					<verbose>false</verbose>
 					<aspectLibraries>
 						<aspectLibrary>
 							<groupId>org.springframework</groupId>
