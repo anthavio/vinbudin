@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false" scan="true" scanPeriod="30 seconds">
 
-	<appender name="LOGFILE" class="ch.qos.logback.core.FileAppender">
+	<appender name="LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<File>logs/vinbudin.log</File>
 		<Append>true</Append>
 

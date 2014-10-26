@@ -347,6 +347,7 @@ public class OAuthController {
 
 	private Properties load(String name) {
 		String property = System.getProperty(name, name);
+
 		try {
 			InputStream stream;
 			File file = new File(property);

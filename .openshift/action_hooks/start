@@ -12,4 +12,4 @@ cd $OPENSHIFT_REPO_DIR
 JAVA_SPROPS="-Doauth.properties=${OPENSHIFT_DATA_DIR}/oauth.properties"
 BOOT_PARAMS="--server.port=${OPENSHIFT_DIY_PORT} --server.address=${OPENSHIFT_DIY_IP} --spring.profiles.active=openshift"
 
-nohup java -jar target/*.war -Xms128m -Xmx256m ${JAVA_SPROPS} ${BOOT_PARAMS} &
+nohup java -Xms128m -Xmx256m ${JAVA_SPROPS} -jar target/*.war ${BOOT_PARAMS} &
