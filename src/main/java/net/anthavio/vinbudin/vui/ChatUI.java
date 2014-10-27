@@ -3,18 +3,18 @@ package net.anthavio.vinbudin.vui;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
+import net.anthavio.aspect.Logged;
+import net.anthavio.vaadin.CallbackRegistry;
 import net.anthavio.vinbudin.ChatMan;
 import net.anthavio.vinbudin.ChatMessage;
 import net.anthavio.vinbudin.ChatMessageListener;
 import net.anthavio.vinbudin.ChatService;
 import net.anthavio.vinbudin.OAuthController.OAuthProvider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.VaadinUI;
-import org.vaadin.spring.events.EventBus;
-import org.vaadin.spring.events.EventBusListenerMethod;
-import org.vaadin.spring.events.EventBusScope;
-import org.vaadin.spring.events.EventScope;
 
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Push;
@@ -46,7 +46,9 @@ import com.vaadin.ui.themes.ValoTheme;
 @PreserveOnRefresh
 @Theme("valo")
 @Push(transport = Transport.WEBSOCKET)
-public class ChatUI extends UI implements ChatMessageListener {
+public class ChatUI extends UI {
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private static final long serialVersionUID = 1L;
 
@@ -56,8 +58,7 @@ public class ChatUI extends UI implements ChatMessageListener {
 	ChatService service;
 
 	@Autowired
-	@EventBusScope(EventScope.APPLICATION)
-	EventBus busAppScope;
+	CallbackRegistry registry;
 
 	MenuBar menubar = new MenuBar();
 	MenuItem miLogin;
@@ -71,6 +72,7 @@ public class ChatUI extends UI implements ChatMessageListener {
 
 	Label labelBoard = new Label("", ContentMode.PREFORMATTED);
 
+	@Logged
 	@Override
 	protected void init(VaadinRequest request) {
 
@@ -89,7 +91,6 @@ public class ChatUI extends UI implements ChatMessageListener {
 		buttonSend.addClickListener(event -> {
 			ChatMessage message = new ChatMessage(getMe(), fieldMessage.getValue());
 			service.addMessage(message);
-			busAppScope.publish(this, message);
 			fieldMessage.setValue("");
 			buttonSend.setEnabled(false);
 		});
@@ -103,9 +104,8 @@ public class ChatUI extends UI implements ChatMessageListener {
 		buttonClear.setEnabled(false);
 		buttonClear.addClickListener(event -> {
 			service.clearMessages();
-			ChatMessage message = new ChatMessage(getMe(), "Clearing discussion now...");
+			ChatMessage message = new ChatMessage(getMe(), "Cleared discussion...");
 			service.addMessage(message);
-			busAppScope.publish(this, message);
 		});
 
 		menubar.setWidth("100%");
@@ -113,11 +113,15 @@ public class ChatUI extends UI implements ChatMessageListener {
 		for (OAuthProvider p : OAuthProvider.values()) {
 			miLogin.addItem(p.name(), loginCommand);
 		}
-		miLogout = menubar.addItem("Replaceme", null);
+		miLogout = menubar.addItem("Replace Me", null);
 		miLogout.addItem("Logout", (selectedItem) -> {
-			setMe(null);
-			setUiStateByLogin();
-		});
+			//Say good bye...
+				ChatMessage message = new ChatMessage(getMe(), "Logged out...");
+				service.addMessage(message);
+
+				setMe(null);
+				setUiStateByLogin();
+			});
 
 		HorizontalLayout lSending = new HorizontalLayout(fieldMessage, buttonSend, buttonCancel, buttonClear);
 		lSending.setWidth("100%");
@@ -135,10 +139,16 @@ public class ChatUI extends UI implements ChatMessageListener {
 		setUiStateByLogin();
 		refreshMessageBoard();
 		fieldMessage.focus();
-		//service.register(this);
-		busAppScope.subscribe(this);
+		registry.attach(this, new ChatMessageListener() {
+
+			@Override
+			public void onEvent(ChatMessage message) {
+				onChatMessage(message);
+			}
+		});
 	}
 
+	@Logged
 	@Override
 	protected void refresh(VaadinRequest request) {
 		setUiStateByLogin();
@@ -146,10 +156,10 @@ public class ChatUI extends UI implements ChatMessageListener {
 		fieldMessage.focus();
 	}
 
+	@Logged
 	@Override
 	public void detach() {
-		//service.unregister(this);
-		busAppScope.unsubscribe(this);
+		registry.detach(this);
 		super.detach();
 	}
 
@@ -173,19 +183,23 @@ public class ChatUI extends UI implements ChatMessageListener {
 		}
 	}
 
-	@EventBusListenerMethod
-	@Override
+	@Logged
+	//@EventBusListenerMethod
 	public void onChatMessage(ChatMessage message) {
 		//Push magic happens here
 		access(new Runnable() {
 			@Override
 			public void run() {
-				if (message.getAuthor() != getMe()) {
-					Notification n = new Notification("Message from " + message.getAuthor().getName(), message.getText(),
-							Type.TRAY_NOTIFICATION);
-					n.show(getPage());
+				try {
+					if (message.getAuthor() != getMe()) {
+						Notification n = new Notification("Message from " + message.getAuthor().getName(), message.getText(),
+								Type.TRAY_NOTIFICATION);
+						n.show(getPage());
+					}
+					refreshMessageBoard();
+				} catch (Exception x) {
+					logger.warn("onChatMessage push failed", x);
 				}
-				refreshMessageBoard();
 			}
 		});
 

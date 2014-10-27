@@ -12,6 +12,7 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpSession;
 
+import net.anthavio.aspect.Logged;
 import net.anthavio.httl.HttlResponse;
 import net.anthavio.httl.HttlResponseExtractor;
 import net.anthavio.httl.HttlResponseExtractor.ExtractedResponse;
@@ -22,12 +23,18 @@ import net.anthavio.httl.auth.OAuthTokenResponse;
 import net.anthavio.httl.util.HttlUtil;
 import net.anthavio.vinbudin.vui.ChatUI;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * 
+ * @author martin.vanek
+ *
+ */
 @Controller
 @RequestMapping("/oauth")
 public class OAuthController {
@@ -72,7 +79,11 @@ public class OAuthController {
 		}
 	}
 
-	public OAuthController() {
+	private ChatService service;
+
+	@Autowired
+	public OAuthController(ChatService service) {
+		this.service = service;
 		Properties properties = load("oauth.properties");
 		String redirectUri = properties.getProperty("oauth.redirect_uri");
 		OAuthProvider.GOOGLE.setOAuth(buildGoogle(properties, redirectUri), "openid profile");
@@ -130,20 +141,25 @@ public class OAuthController {
 		return access_token;
 	}
 
-	@ResponseBody
+	@Logged
 	@RequestMapping(value = "callback/{provider}", params = "error")
 	public String oauthErrorCallback(@PathVariable(value = "provider") String provider,
 			@RequestParam(value = "error") String error,
 			@RequestParam(value = "error_description", required = false) String error_description) {
+		/*
 		if (error_description != null) {
 			return error + ": " + error_description;
 		} else {
 			return error;
 		}
+		*/
 		//When user clicks Deny -> error=access_denied
 		//return service.oauthErrorCallback(error);
+		// Don't care much...
+		return "redirect:/ui?login_error=" + error;
 	}
 
+	@Logged
 	@RequestMapping(value = "callback/{provider}", params = "code")
 	public String oauthCodeCallback(@PathVariable(value = "provider") String provider,
 			@RequestParam(value = "code") String code, HttpSession session) {
@@ -175,8 +191,11 @@ public class OAuthController {
 		default:
 			throw new IllegalStateException("Unknown " + p);
 		}
-
-		session.setAttribute(ChatUI.ME_KEY, new ChatMan(name, p));
+		ChatMan me = new ChatMan(name, p);
+		session.setAttribute(ChatUI.ME_KEY, me);
+		//Say hello...
+		ChatMessage message = new ChatMessage(me, "Logged in...");
+		service.addMessage(message);
 		//Go back to Vaddin UI
 		return "redirect:/ui";
 	}

@@ -1,42 +1,33 @@
 package net.anthavio.vinbudin;
 
 import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.anthavio.vaadin.CallbackRegistry;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * 
+ * @author martin.vanek
+ *
+ */
 @Service
 public class ChatService {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private CallbackRegistry registry;
 
-	private final List<ChatMessageListener> listeners = new CopyOnWriteArrayList<ChatMessageListener>();
+	@Autowired
+	public ChatService(CallbackRegistry registry) {
+		this.registry = registry;
+	}
 
 	private AutoDiscardingDeque<ChatMessage> messages = new AutoDiscardingDeque<ChatMessage>(100);
 
-	public void register(ChatMessageListener listener) {
-		listeners.add(listener);
-	}
-
-	public void unregister(ChatMessageListener listener) {
-		listeners.remove(listener);
-	}
-
 	public void addMessage(ChatMessage message) {
 		messages.add(message);
-		/*
-		listeners.forEach(listener -> {
-			try {
-				listener.onChatMessage(message);
-			} catch (Exception x) {
-				logger.warn("Listener " + listener + " failed");
-			}
-		});
-		*/
+		registry.publish(message);
 	}
 
 	public void clearMessages() {

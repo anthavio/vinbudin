@@ -1,5 +1,9 @@
 package net.anthavio.vinbudin;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import javax.servlet.http.HttpSessionListener;
 
 import org.springframework.boot.SpringApplication;
@@ -34,6 +38,12 @@ public class VinbudinBoot extends SpringBootServletInitializer {
 	@Bean
 	public HttpSessionListener AtmosphereSessionSupport() {
 		return new org.atmosphere.cpr.SessionSupport();
+	}
+
+	@Bean
+	public net.anthavio.vaadin.CallbackRegistry CallbackRegistry() {
+		ExecutorService executor = Executors.newFixedThreadPool(10);
+		return new net.anthavio.vaadin.CallbackRegistry(executor, 3, TimeUnit.SECONDS);
 	}
 
 	/*

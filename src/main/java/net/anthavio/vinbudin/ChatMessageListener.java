@@ -1,11 +1,12 @@
 package net.anthavio.vinbudin;
 
+import net.anthavio.vaadin.CallbackListener;
+
 /**
  * 
  * @author martin.vanek
  *
  */
-public interface ChatMessageListener {
+public interface ChatMessageListener extends CallbackListener<ChatMessage> {
 
-	public void onChatMessage(ChatMessage message);
 }
