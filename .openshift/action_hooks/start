@@ -2,14 +2,14 @@
 
 source $OPENSHIFT_CARTRIDGE_SDK_BASH
 
-set -x
-
-export JAVA_HOME=$OPENSHIFT_DATA_DIR/jdk1.8.0_20
-export PATH=$JAVA_HOME/bin:$PATH
-
 cd $OPENSHIFT_REPO_DIR
 
-JAVA_SPROPS="-Doauth.properties=${OPENSHIFT_DATA_DIR}/oauth.properties"
-BOOT_PARAMS="--server.port=${OPENSHIFT_DIY_PORT} --server.address=${OPENSHIFT_DIY_IP} --spring.profiles.active=openshift"
+export JAVA_HOME=${OPENSHIFT_DATA_DIR}/jdk1.8.0_25
 
-nohup java -Xms128m -Xmx256m ${JAVA_SPROPS} -jar target/*.war ${BOOT_PARAMS} &
+#scp src/main/resources/oauth.properties 544d051be0b8cd509b00001c@vinbudin-compost.rhcloud.com:/var/lib/openshift/544d051be0b8cd509b00001c/app-root/data/oauth.properties
+
+APP_SPROPS="-Doauth.properties=${OPENSHIFT_DATA_DIR}/oauth.properties"
+JAVA_OPTS="-Dfile.encoding=UTF-8 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${OPENSHIFT_DATA_DIR}"
+APP_PARAMS="--server.port=${OPENSHIFT_DIY_PORT} --server.address=${OPENSHIFT_DIY_IP} --spring.profiles.active=openshift"
+
+nohup ${JAVA_HOME}/bin/java -Xms128m -Xmx256m ${JAVA_OPTS} ${APP_SPROPS} -jar target/*.war ${APP_PARAMS} &
