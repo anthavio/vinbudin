@@ -14,6 +14,7 @@ import net.anthavio.vinbudin.OAuthController.OAuthProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.spring.VaadinUI;
 
 import com.vaadin.annotations.PreserveOnRefresh;
@@ -103,9 +104,15 @@ public class ChatUI extends UI {
 
 		buttonClear.setEnabled(false);
 		buttonClear.addClickListener(event -> {
-			service.clearMessages();
-			ChatMessage message = new ChatMessage(getMe(), "Cleared discussion...");
-			service.addMessage(message);
+			ConfirmDialog.show(this, "Please Confirm:", "Delete all messages?", "Yes", "Nope", new ConfirmDialog.Listener() {
+				public void onClose(ConfirmDialog dialog) {
+					if (dialog.isConfirmed()) {
+						service.clearMessages();
+						ChatMessage message = new ChatMessage(getMe(), "Cleared discussion...");
+						service.addMessage(message);
+					}
+				}
+			});
 		});
 
 		menubar.setWidth("100%");
