@@ -20,6 +20,7 @@ import org.vaadin.spring.VaadinUI;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.VaadinRequest;
@@ -44,8 +45,9 @@ import com.vaadin.ui.themes.ValoTheme;
  *
  */
 @VaadinUI
-@PreserveOnRefresh
 @Theme("valo")
+@Title("Vaadin Chat")
+@PreserveOnRefresh
 @Push(transport = Transport.WEBSOCKET)
 public class ChatUI extends UI {
 

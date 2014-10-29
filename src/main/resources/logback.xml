@@ -19,6 +19,33 @@
 
 	</appender>
 	
+	<appender name="PAPERTRAIL" class="ch.qos.logback.classic.net.SyslogAppender">
+		<syslogHost>logs2.papertrailapp.com</syslogHost>
+		<port>44096</port>
+		<facility>USER</facility>
+		<suffixPattern>%thread: %-5level %logger{36} - %msg%n</suffixPattern>
+	</appender>
+
+	<appender name="LOGENTRIES" class="com.logentries.logback.LogentriesAppender">
+		<Debug>false</Debug>
+		<Token>8d6b4f57-cfbf-4ed1-96cb-a4af639af6d5</Token>
+		<Ssl>false</Ssl>
+		<facility>USER</facility>
+		<layout>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</layout>
+	</appender>
+	
+	<appender name="AIRBRAKE" class="net.anthavio.airbrake.AirbrakeLogbackAppender">
+		<apiKey>23a6223a7049b15c09f01cfa7922a390</apiKey>
+		<env>test</env>
+		<notify>ALL</notify>
+
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+	</appender>
+	
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -27,7 +54,7 @@
 		
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<charset class="java.nio.charset.Charset">UTF-8</charset>
-			<pattern>%d|%-10t|%X{TxInfo}|%-5p|%c{40}: %m%n</pattern>
+			<pattern>%d|%-10t|%-5p|%c{40}: %m%n</pattern>
 		</encoder>
 		
 	</appender>
@@ -48,6 +75,9 @@
 		<level value="info" />
 		<appender-ref ref="CONSOLE" />
 		<appender-ref ref="LOGFILE" />
+		<appender-ref ref="PAPERTRAIL" />
+		<appender-ref ref="LOGENTRIES" />
+		<appender-ref ref="AIRBRAKE" />
 	</root>
 	
 </configuration>

@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>net.anthavio.maven</groupId>
 		<artifactId>anthavio-super-pom</artifactId>
-		<version>3.1</version>
+		<version>4</version>
 		<relativePath/>
 	</parent>
 
@@ -19,7 +19,7 @@
 		
 		<project.build.java.target>1.8</project.build.java.target>
 		
-		<aspectj.version>1.8.2</aspectj.version>
+		<aspectj.version>1.8.3</aspectj.version>
 		<vaadin.version>7.3.3</vaadin.version>
 		
 		<spring.version>4.1.1.RELEASE</spring.version>
@@ -69,7 +69,25 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>com.logentries</groupId>
+			<artifactId>logentries-appender</artifactId>
+			<version>1.1.27</version>
+		</dependency>
+		<!--
+		<dependency>
+			<groupId>com.papertrailapp</groupId>
+  		<artifactId>logback-syslog4j</artifactId>
+  		<version>1.0.0</version>
+		</dependency>
+		-->
+		<dependency>
+			<groupId>net.anthavio</groupId>
+			<artifactId>airbrake-logback</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>net.anthavio</groupId>
 			<artifactId>hatatitla</artifactId>
@@ -110,6 +128,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 			<version>${spring-boot.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!--
 		<dependency>

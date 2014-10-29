@@ -1,11 +1,9 @@
-package vinbudin;
-
-import net.anthavio.vinbudin.VinbudinBoot;
+package net.anthavio.vinbudin;
 
 import org.springframework.boot.SpringApplication;
 
 /**
- * Test scoped main() can access test classes/resources
+ * Test scoped main() can access test classes/resources (logback-test.xml specifically)
  * 
  * @author martin.vanek
  *

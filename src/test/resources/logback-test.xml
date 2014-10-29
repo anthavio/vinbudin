@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false" scan="true" scanPeriod="10 seconds">
-
-	<appender name="LOGFILE" class="ch.qos.logback.core.FileAppender">
-		<File>target/vinbudin.log</File>
-		<Append>false</Append>
-
+	
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<charset class="java.nio.charset.Charset">UTF-8</charset>
 			<pattern>%d|%-10t|%-5p|%c{40}: %m%n</pattern>
-		</encoder>
-
-	</appender>
-	
-	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-
-		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<charset class="java.nio.charset.Charset">UTF-8</charset>
-			<pattern>%d|%-10t|%X{TxInfo}|%-5p|%c{40}: %m%n</pattern>
 		</encoder>
 	</appender>
 	
@@ -36,6 +24,7 @@
 		<level value="info" />
 		<appender-ref ref="CONSOLE" />
 		<appender-ref ref="LOGFILE" />
+		<appender-ref ref="AIRBRAKE" />
 	</root>
 	
 </configuration>
