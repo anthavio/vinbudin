@@ -1,5 +1,6 @@
 package net.anthavio.vinbudin;
 
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.boot.SpringApplication;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 public class TestVinbudinBoot {
 
 	public static void main(String[] args) {
+		SLF4JBridgeHandler.install();
 		SpringApplication.run(VinbudinBoot.class, args);
 	}
 }

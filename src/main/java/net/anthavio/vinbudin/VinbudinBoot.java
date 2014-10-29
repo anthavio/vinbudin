@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpSessionListener;
 
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -55,6 +56,7 @@ public class VinbudinBoot extends SpringBootServletInitializer {
 	*/
 
 	public static void main(String[] args) {
+		SLF4JBridgeHandler.install();
 		SpringApplication.run(VinbudinBoot.class, args);
 	}
 
