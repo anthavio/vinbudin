@@ -87,13 +87,13 @@
 			<artifactId>logentries-appender</artifactId>
 			<version>1.1.27</version>
 		</dependency>
-		<!--
+		
 		<dependency>
 			<groupId>com.papertrailapp</groupId>
   		<artifactId>logback-syslog4j</artifactId>
   		<version>1.0.0</version>
 		</dependency>
-		-->
+		
 		<dependency>
 			<groupId>net.anthavio</groupId>
 			<artifactId>airbrake-logback</artifactId>

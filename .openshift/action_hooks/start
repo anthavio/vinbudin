@@ -12,4 +12,4 @@ APP_SPROPS="-Doauth.properties=${OPENSHIFT_DATA_DIR}/oauth.properties -Dlogback.
 JAVA_OPTS="-Dfile.encoding=UTF-8 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${OPENSHIFT_DATA_DIR}"
 APP_PARAMS="--server.port=${OPENSHIFT_DIY_PORT} --server.address=${OPENSHIFT_DIY_IP} --spring.profiles.active=openshift"
 
-nohup ${JAVA_HOME}/bin/java -Xms128m -Xmx256m ${JAVA_OPTS} ${APP_SPROPS} -jar target/*.war ${APP_PARAMS} > ${OPENSHIFT_DATA_DIR}/std.out 2>&1 &
+nohup ${JAVA_HOME}/bin/java -Xms128m -Xmx256m ${JAVA_OPTS} ${APP_SPROPS} -jar target/*.war ${APP_PARAMS} > ${OPENSHIFT_DATA_DIR}/logs/standard.out 2>&1 &
