@@ -10,7 +10,7 @@ export JAVA_HOME=${OPENSHIFT_DATA_DIR}/jdk1.8.0_25
 
 APP_SPROPS="-Doauth.properties=${OPENSHIFT_DATA_DIR}/oauth.properties"
 JAVA_OPTS="-Dfile.encoding=UTF-8 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${OPENSHIFT_DATA_DIR}"
-JAVA_OPTS="$JAVA_OPTS -javaagent:${OPENSHIFT_DATA_DIR}/AppDynamicsAgent-3.9.3.0/javaagent.jar"
+JAVA_OPTS="$JAVA_OPTS -javaagent:${OPENSHIFT_DATA_DIR}/AppDynamicsAgent-3.9.3.0/javaagent.jar -Dappdynamics.agent.socket.no.local.bind=true"
 APP_PARAMS="--server.port=${OPENSHIFT_DIY_PORT} --server.address=${OPENSHIFT_DIY_IP} --logging.config=${OPENSHIFT_DATA_DIR}/logback.xml --spring.profiles.active=openshift"
 
 nohup ${JAVA_HOME}/bin/java -Xms128m -Xmx256m ${JAVA_OPTS} ${APP_SPROPS} -jar target/*.war ${APP_PARAMS} > ${OPENSHIFT_DATA_DIR}/logs/standard.out 2>&1 &
