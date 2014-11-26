@@ -20,10 +20,10 @@
 		<project.build.java.target>1.8</project.build.java.target>
 		
 		<aspectj.version>1.8.3</aspectj.version>
-		<vaadin.version>7.3.3</vaadin.version>
+		<vaadin.version>7.3.5</vaadin.version>
 		
-		<spring.version>4.1.1.RELEASE</spring.version>
-		<spring-boot.version>1.1.8.RELEASE</spring-boot.version>
+		<spring.version>4.1.2.RELEASE</spring.version>
+		<spring-boot.version>1.2.0.RC1</spring-boot.version>
 		
 		<start-class>net.anthavio.vinbudin.VinbudinBoot</start-class>
 		
@@ -37,7 +37,7 @@
 			<dependency>
 				<groupId>net.anthavio.maven</groupId>
 				<artifactId>spring-framework-bom</artifactId>
-				<version>4.1.1.RELEASE</version>
+				<version>${spring.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -45,7 +45,7 @@
 			<dependency>
 				<groupId>net.anthavio.maven</groupId>
 				<artifactId>jetty-bom</artifactId>
-				<version>9.2.3</version>
+				<version>9.2.5</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -169,55 +169,20 @@
 			<version>${spring-boot.version}</version>
 		</dependency>
 		-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<version>${spring-boot.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jetty</artifactId>
-			<version>${spring-boot.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-webapp</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-jsp</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-jsp</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.eclipse.jetty.websocket</groupId>
-			<artifactId>websocket-server</artifactId>
-		</dependency>
-
+				
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 			<version>${spring-boot.version}</version>
 		</dependency>
-<!--		
+
+<!--
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session</artifactId>
+			<version>1.0.0.RC1</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -299,6 +264,42 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-push</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>${spring-boot.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jetty</artifactId>
+			<version>${spring-boot.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>websocket-server</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-server</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+		
 <!--
 		<dependency>
 			<groupId>com.vaadin</groupId>
@@ -312,11 +313,6 @@
 			</exclusions>
 		</dependency>
 -->
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-push</artifactId>
-			<version>${vaadin.version}</version>
-		</dependency>
 		
 		<dependency>
 			<groupId>org.vaadin.addon</groupId>
